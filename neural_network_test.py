@@ -12,7 +12,8 @@ def main():
 	args = parser.parse_args()
 
 	# Start the testing
-	neural_network = TFNeuralNetwork([784, 200, 10], epochs=10, verbose=args.verbose, disable_graph=args.disable_graph)
+	neural_network = TFNeuralNetwork([784, 200, 10], epochs=10, verbose=args.verbose, 
+		disable_graph=args.disable_graph)
 	neural_network.train()
 
 if __name__ == '__main__':

@@ -56,14 +56,17 @@ class TFNeuralNetwork:
 		for i in range(0, self.n_hidden_layers):
 			if i == 0:
 				# First hidden layer, start with input as input layer
-				self.hidden_layers[i] = tf.add(tf.matmul(self.graph_x, self.weights['h0']), self.biases['b0'])
+				self.hidden_layers[i] = tf.add(tf.matmul(self.graph_x, self.weights['h0']), 
+					self.biases['b0'])
 			else:
 				# Input is previous hidden layer
-				self.hidden_layers[i] = tf.add(tf.matmul(self.hidden_layers[i-1], self.weights[self.__get_translated_idx(i)]), self.biases[self.__get_translated_idx(i, 'b')])
+				self.hidden_layers[i] = tf.add(tf.matmul(self.hidden_layers[i-1], 
+					self.weights[self.__get_translated_idx(i)]), self.biases[self.__get_translated_idx(i, 'b')])
 			self.hidden_layers[i] = tf.nn.sigmoid(self.hidden_layers[i])
 
 		# Output layer
-		output_layer = tf.matmul(self.hidden_layers[self.n_hidden_layers-1], self.weights['out']) + self.biases['out']
+		output_layer = tf.matmul(self.hidden_layers[self.n_hidden_layers-1], 
+			self.weights['out']) + self.biases['out']
 
 		return output_layer
 
@@ -73,7 +76,8 @@ class TFNeuralNetwork:
 	def train(self):
 		# Initialization
 		prediction = self.network()
-		cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=self.graph_y))
+		cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, 
+			labels=self.graph_y))
 		optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(cost)
 		init = tf.global_variables_initializer()
 
@@ -91,7 +95,8 @@ class TFNeuralNetwork:
 					batch_x, batch_y = self.MNIST.train.next_batch(self.TRAINING_BATCH_SIZE)
 
 					# Run the optimizer
-					_, error_rate = session.run([optimizer, cost], feed_dict={self.graph_x: batch_x, self.graph_y: batch_y})
+					_, error_rate = session.run([optimizer, cost], feed_dict={self.graph_x: batch_x, 
+						self.graph_y: batch_y})
 					avg_cost += error_rate/total_batch_size
 
 					# Store error for graphing
@@ -109,7 +114,8 @@ class TFNeuralNetwork:
 			accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
 			# Output accuracy to terminal
-			print "Accuracy:", accuracy.eval({self.graph_x: self.MNIST.test.images, self.graph_y: self.MNIST.test.labels})
+			print "Accuracy:", accuracy.eval({self.graph_x: self.MNIST.test.images, 
+				self.graph_y: self.MNIST.test.labels})
 
 			# Show the graphs
 			if not self.disable_graph:
@@ -129,16 +135,19 @@ class TFNeuralNetwork:
 			# Weights
 			if i == 0:
 				# First hidden layer, start with input layer
-				self.weights[self.__get_translated_idx(i)] = tf.Variable(tf.random_normal([self.n_inputs, self.hidden_layer_nodes[0]]))
+				self.weights[self.__get_translated_idx(i)] = tf.Variable(tf.random_normal([self.n_inputs, 
+					self.hidden_layer_nodes[0]]))
 			else:
 				# Continue with input being previous hidden layer
-				self.weights[self.__get_translated_idx(i)] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[i-1], self.hidden_layer_nodes[i]]))
+				self.weights[self.__get_translated_idx(i)] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[i-1], 
+					self.hidden_layer_nodes[i]]))
 
 			# Biases
 			self.biases[self.__get_translated_idx(i, 'b')] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[i]]))
 
 		# Add the outputs to weights and biases
-		self.weights['out'] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[self.n_hidden_layers-1], self.n_outputs]))
+		self.weights['out'] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[self.n_hidden_layers-1], 
+			self.n_outputs]))
 		self.biases['out'] = tf.Variable(tf.random_normal([self.n_outputs]))
 
 	##########
