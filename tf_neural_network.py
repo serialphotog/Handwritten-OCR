@@ -1,7 +1,7 @@
 import tensorflow as tf
-from input_data import read_data_sets # For MNIST dataset
+from Util.input_data import read_data_sets # For MNIST dataset
 
-from GraphEngine import GraphEngine
+from Util.GraphEngine import GraphEngine
 
 class TFNeuralNetwork:
 
