@@ -1,6 +1,8 @@
 import tensorflow as tf
 from input_data import read_data_sets # For MNIST dataset
 
+from GraphEngine import GraphEngine
+
 class TFNeuralNetwork:
 
 	TRAINING_BATCH_SIZE = 100
@@ -13,9 +15,16 @@ class TFNeuralNetwork:
 	#		* All other entries represent hidden layers
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
-	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False):
-		# Store the verbose flag
+	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False):
+		# Store cmd option flags
 		self.verbose = verbose
+		self.disable_graph = disable_graph
+
+		# Setup error rate graph
+		if not self.disable_graph:
+			self.error_graph = GraphEngine()
+			self.error_graph.set_title("Rate of Error")
+			self.error_graph.set_axis_labels()
 
 		# Setup the MNIST data
 		self.MNIST = read_data_sets("MNIST_data/", one_hot=True)
@@ -85,6 +94,10 @@ class TFNeuralNetwork:
 					_, error_rate = session.run([optimizer, cost], feed_dict={self.graph_x: batch_x, self.graph_y: batch_y})
 					avg_cost += error_rate/total_batch_size
 
+					# Store error for graphing
+					if not self.disable_graph:
+						self.error_graph.add_plot_point(error_rate)
+
 				# Print the epoch results to the terminal
 				if self.verbose and epoch % 1 == 0: 
 					print "Epoch:", '%04d' % (epoch+1), "cost=", "{:9f}".format(avg_cost)
@@ -97,6 +110,11 @@ class TFNeuralNetwork:
 
 			# Output accuracy to terminal
 			print "Accuracy:", accuracy.eval({self.graph_x: self.MNIST.test.images, self.graph_y: self.MNIST.test.labels})
+
+			# Show the graphs
+			if not self.disable_graph:
+				self.error_graph.plot()
+				self.error_graph.show()
 
 	##########
 	# Initializes the weights and biases for the network
