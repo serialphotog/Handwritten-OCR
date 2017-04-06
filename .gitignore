@@ -4,5 +4,6 @@
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
-pip-selfcheckout.json
+pip-selfcheck.json
 *.pyc
+MNIST_data
