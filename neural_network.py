@@ -113,16 +113,22 @@ class NeuralNetwork:
 
 		# Calculate the network accuracy
 		correct_prediction = tf.equal(tf.argmax(self.prediction, 1), tf.argmax(self.graph_y, 1))
-		accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+		self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
 		# Output accuracy to terminal
-		print "Accuracy:", accuracy.eval({self.graph_x: self.MNIST.test.images, 
+		print "Accuracy:", self.accuracy.eval({self.graph_x: self.MNIST.test.images, 
 			self.graph_y: self.MNIST.test.labels}, session=self.session)
 
 		# Show the graphs
 		if not self.disable_graph:
+			
 			self.error_graph.plot()
 			self.error_graph.show()
+
+	def test(self, image_data, correct_vals):
+		#prediction = tf.argmax(self.network(), 1)
+		#print self.session.run(self.prediction, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
+		print self.session.run(self.accuracy, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
 
 	##########
 	# Sets up network layers
