@@ -34,6 +34,13 @@ class TFNeuralNetwork:
 		# Number of epochs for training cycle
 		self.n_epochs = epochs
 
+		# Build the network
+		self.__build_network(layers)
+
+	##########
+	# Builds the neural network
+	##########
+	def __build_network(self, layers):
 		# Build the layers
 		self.__build_layers(layers)
 
@@ -43,6 +50,16 @@ class TFNeuralNetwork:
 
 		# Initializes storage for weights and biases in our network
 		self.__init_values()
+
+		# Prediction engine and optimization
+		self.prediction = self.network()
+		self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.prediction, labels=self.graph_y))
+		self.optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(self.cost)
+		init = tf.global_variables_initializer()
+
+		# Setup the session
+		self.session = tf.Session()
+		self.session.run(init)
 
 	##########
 	# The neural network
@@ -70,53 +87,42 @@ class TFNeuralNetwork:
 	# Trains the neural network
 	##########
 	def train(self):
-		# Initialization
-		prediction = self.network()
-		cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, 
-			labels=self.graph_y))
-		optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(cost)
-		init = tf.global_variables_initializer()
+		# Train the network according to number of epochs
+		for epoch in range(self.n_epochs):
+			avg_cost = 0
+			total_batch_size = int(self.MNIST.train.num_examples/self.TRAINING_BATCH_SIZE)
 
-		# Run the training cycle
-		with tf.Session() as session:
-			session.run(init)
+			# Loop over the batches
+			for i in range(total_batch_size):
+				batch_x, batch_y = self.MNIST.train.next_batch(self.TRAINING_BATCH_SIZE)
 
-			# Train the network according to number of epochs
-			for epoch in range(self.n_epochs):
-				avg_cost = 0
-				total_batch_size = int(self.MNIST.train.num_examples/self.TRAINING_BATCH_SIZE)
+				# Run the optimizer
+				_, error_rate = self.session.run([self.optimizer, self.cost], feed_dict={self.graph_x: batch_x, 
+					self.graph_y: batch_y})
+				avg_cost += error_rate/total_batch_size
 
-				# Loop over the batches
-				for i in range(total_batch_size):
-					batch_x, batch_y = self.MNIST.train.next_batch(self.TRAINING_BATCH_SIZE)
+				# Store error for graphing
+				if not self.disable_graph:
+					self.error_graph.add_plot_point(error_rate)
 
-					# Run the optimizer
-					_, error_rate = session.run([optimizer, cost], feed_dict={self.graph_x: batch_x, 
-						self.graph_y: batch_y})
-					avg_cost += error_rate/total_batch_size
+			# Print the epoch results to the terminal
+			if self.verbose and epoch % 1 == 0: 
+				print "Epoch:", '%04d' % (epoch+1), "cost=", "{:9f}".format(avg_cost)
 
-					# Store error for graphing
-					if not self.disable_graph:
-						self.error_graph.add_plot_point(error_rate)
+		print "Training completed!"
 
-				# Print the epoch results to the terminal
-				if self.verbose and epoch % 1 == 0: 
-					print "Epoch:", '%04d' % (epoch+1), "cost=", "{:9f}".format(avg_cost)
+		# Calculate the network accuracy
+		correct_prediction = tf.equal(tf.argmax(self.prediction, 1), tf.argmax(self.graph_y, 1))
+		accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
-			print "Training completed!"
+		# Output accuracy to terminal
+		print "Accuracy:", accuracy.eval({self.graph_x: self.MNIST.test.images, 
+			self.graph_y: self.MNIST.test.labels}, session=self.session)
 
-			# Calculate the network accuracy
-			correct_prediction = tf.equal(tf.argmax(prediction, 1), tf.argmax(self.graph_y, 1))
-			accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-
-			# Output accuracy to terminal
-			print "Accuracy:", accuracy.eval({self.graph_x: self.MNIST.test.images, 
-				self.graph_y: self.MNIST.test.labels})
-
-			# Show the graphs
-			if not self.disable_graph:
-				self.error_graph.plot()
-				self.error_graph.show()
+		# Show the graphs
+		if not self.disable_graph:
+			self.error_graph.plot()
+			self.error_graph.show()
 
 	##########
 	# Sets up network layers
