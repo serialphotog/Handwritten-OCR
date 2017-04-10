@@ -126,9 +126,10 @@ class NeuralNetwork:
 			self.error_graph.show()
 
 	def test(self, image_data, correct_vals):
-		#prediction = tf.argmax(self.network(), 1)
-		#print self.session.run(self.prediction, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
-		print self.session.run(self.accuracy, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
+		print "Running test case: "
+		_, error_rate = self.session.run([self.prediction, self.cost], feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
+		print "Error rate: ", error_rate
+		print "Accuracy: ", self.session.run(self.accuracy, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
 
 	##########
 	# Sets up network layers
