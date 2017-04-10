@@ -35,11 +35,7 @@ class TFNeuralNetwork:
 		self.n_epochs = epochs
 
 		# Build the layers
-		self.n_hidden_layers = len(layers) - 2
-		self.hidden_layer_nodes = layers[1:-1]
-		self.hidden_layers = [None] * self.n_hidden_layers
-		self.n_inputs = layers[0]
-		self.n_outputs = layers[len(layers)-1]
+		self.__build_layers(layers)
 
 		# Placeholders for data in the TF Graph
 		self.graph_x = tf.placeholder("float", [None, self.n_inputs])
@@ -121,6 +117,21 @@ class TFNeuralNetwork:
 			if not self.disable_graph:
 				self.error_graph.plot()
 				self.error_graph.show()
+
+	##########
+	# Sets up network layers
+	##########
+	def __build_layers(self, layers):
+		# The number of hidden layers
+		self.n_hidden_layers = len(layers) - 2
+		# Strip input and output layers, leaving hiden layers
+		self.hidden_layer_nodes = layers[1:-1]
+		# Storage for the hidden layers
+		self.hidden_layers = [None] * self.n_hidden_layers
+		# The number of input nodes
+		self.n_inputs = layers[0]
+		# The number of output nodes
+		self.n_outputs = layers[len(layers) - 1]
 
 	##########
 	# Initializes the weights and biases for the network
