@@ -3,7 +3,7 @@ from Util.input_data import read_data_sets # For MNIST dataset
 
 from Util.GraphEngine import GraphEngine
 
-class TFNeuralNetwork:
+class NeuralNetwork:
 
 	TRAINING_BATCH_SIZE = 100
 

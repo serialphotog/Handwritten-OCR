@@ -1,6 +1,6 @@
 import argparse
 
-from tf_neural_network import TFNeuralNetwork 
+from neural_network import NeuralNetwork 
 
 def main():
 	# Handle command line arguments
@@ -12,7 +12,7 @@ def main():
 	args = parser.parse_args()
 
 	# Start the testing
-	neural_network = TFNeuralNetwork([784, 200, 10], epochs=5, verbose=args.verbose, 
+	neural_network = NeuralNetwork([784, 200, 10], epochs=5, verbose=args.verbose, 
 		disable_graph=args.disable_graph)
 	neural_network.train()
 
