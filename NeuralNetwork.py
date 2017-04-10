@@ -3,8 +3,11 @@ import Util.input_data as input_data
 
 class NeuralNetwork:
 
+	# Batch size for neural network training with MNIST data
+	TRAINING_BATCH_SIZE = 100
+
 	# Initializes the neural network
-	def __init__(self):
+	def __init__(self, learning_rate=0.001):
 		# The MNIST dataset
 		self.mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
@@ -21,7 +24,7 @@ class NeuralNetwork:
 
 		cross_entropy = -tf.reduce_sum(self.y_ * tf.log(self.y))
 
-		self.train_step = tf.train.GradientDescentOptimizer(0.001).minimize(cross_entropy)
+		self.train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)
 
 		init = tf.initialize_all_variables()
 
@@ -33,7 +36,7 @@ class NeuralNetwork:
 	def train(self):
 		# Use 1000 batches of 100 to train the network
 		for i in range(1000):
-			batch_xs, batch_ys = self.mnist.train.next_batch(100)
+			batch_xs, batch_ys = self.mnist.train.next_batch(self.TRAINING_BATCH_SIZE)
 
 			# Run the training step
 			self.session.run(self.train_step, feed_dict={self.x: batch_xs, self.y_: batch_ys})
