@@ -25,8 +25,6 @@ def get_sample_image_data(path):
 		# We want a white image on a black background
 		(threshold, gray_scale) = cv2.threshold(gray_scale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-		#gray_scale = fit_image(gray_scale)
-
 		# Flatten the image:
 		# Our neural network expects that our pixel values be in the range 0-1, not 0-255
 		flattened = gray_scale.flatten() / 255.0
@@ -45,39 +43,3 @@ def get_sample_image_data(path):
 		correct_vals[i] = correct_val
 
 	return image_data, correct_vals
-
-# Fits our image data into a 20x20 area
-#
-# The MNIST samples all fit within a 20x20 area of the total 28x28 image. To account for this, we fit 
-# our samples into a 20x20 area and then ensure that our overall image is the full 28x28
-# Returns the new image data
-def fit_image(image):
-	# Fit image into 20x20 by removing every completely black row and column 
-	while np.sum(image[0]) == 0:
-		image = image[1:]
-	while np.sum(image[:,0]) == 0:
-		image = np.delete[image, 0, 1]
-	while np.sum(image[-1]) == 0:
-		image = image[:-1]
-	while np.sum(image[:,-1]) == 0:
-		image = np.delete(image, -1, 1)
-
-	# Resize to fit the 20x20
-	rows, columns = image.shape
-	if rows > columns:
-		scale_factor = 20.0/rows
-		rows = 20
-		columns = int(round(columns * scale_factor))
-		image = cv2.resize(image, (columns, rows))
-	else:
-		scale_factor = 20.0/columns
-		columns = 20
-		rows = int(round(rows * scale_factor))
-		image = cv2.resize(image, (columns, rows))
-
-	# Resize total image to be full 28x28
-	colPadding = (int(math.ceil((IMAGE_RESIZE-columns)/2.0)), int(math.floor((IMAGE_RESIZE-columns)/2.0)))
-	rowPadding = (int(math.ceil((IMAGE_RESIZE-rows)/2.0)), int(math.floor((IMAGE_RESIZE-rows)/2.0)))
-	image = np.lib.pad(image, (rowPadding, colPadding), 'constant')
-
-	return image
