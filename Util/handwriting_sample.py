@@ -8,7 +8,9 @@ from scipy import ndimage
 # Square size to resize images to
 IMAGE_RESIZE = 28
 
+##########
 # Returns image data array and correct values array
+##########
 def get_sample_image_data(path):
 	# Get data from directory
 	files = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))]
@@ -49,9 +51,11 @@ def get_sample_image_data(path):
 
 	return image_data, correct_vals
 
+##########
 # Shifts image to be more center aligned
 # The openCV documentation is very helpful for figuring this out:
 #	http://docs.opencv.org/master/da/d6e/tutorial_py_geometric_transformations.html#gsc.tab=0
+##########
 def shift_image(image):
 	# Calculate the shift amount
 	cy, cx = ndimage.measurements.center_of_mass(image)

@@ -13,7 +13,7 @@ def main():
 	args = parser.parse_args()
 
 	# Start the testing
-	neural_network = NeuralNetwork([784, 200, 10], epochs=5, verbose=args.verbose, 
+	neural_network = NeuralNetwork([784, 500, 10], epochs=10, verbose=args.verbose, 
 		disable_graph=args.disable_graph)
 	neural_network.train()
 	images, correct_vals = get_sample_image_data("/home/adam/projects/handwriting-samples/raw/")
