@@ -9,7 +9,7 @@ class NetworkStore:
 	##########
 	# Initializes our network storage manager
 	##########
-	def __init__(self, path):
+	def __init__(self):
 		# Generate working dir (Will only work on *nix systems)
 		folder = self.__generate_random_string()
 		self.working_dir = os.path.join('/tmp', folder)
