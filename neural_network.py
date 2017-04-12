@@ -15,7 +15,7 @@ class NeuralNetwork:
 	#		* All other entries represent hidden layers
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
-	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False):
+	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False, load=None):
 		# Store cmd option flags
 		self.verbose = verbose
 		self.disable_graph = disable_graph
@@ -29,13 +29,17 @@ class NeuralNetwork:
 		# Setup the MNIST data
 		self.MNIST = read_data_sets("MNIST_data/", one_hot=True)
 
-		# The learning rate for the network
-		self.learning_rate = learning_rate
-		# Number of epochs for training cycle
-		self.n_epochs = epochs
+		if not load == None:
+			# Load pre-trained model
+			self.__load(load)
+		else:
+			# The learning rate for the network
+			self.learning_rate = learning_rate
+			# Number of epochs for training cycle
+			self.n_epochs = epochs
 
-		# Build the network
-		self.__build_network(layers)
+			# Build the network
+			self.__build_network(layers)
 
 	##########
 	# Builds the neural network

@@ -10,6 +10,8 @@ def main():
 		help="Enables verbose output.")
 	parser.add_argument("-g", action="store_true", dest="disable_graph",
 		help="Disables graph production.")
+	parser.add_argument("-l", dest="load_path", action="store", default=None,
+		help="Load pre-trained model")
 	args = parser.parse_args()
 
 	# Start the testing
