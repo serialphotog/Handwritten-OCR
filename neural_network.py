@@ -2,6 +2,7 @@ import tensorflow as tf
 from Util.input_data import read_data_sets # For MNIST dataset
 
 from Util.GraphEngine import GraphEngine
+from Util.network_store import NetworkStore
 
 class NeuralNetwork:
 
@@ -16,6 +17,9 @@ class NeuralNetwork:
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
 	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False, load=None):
+		# Initialize our network store
+		self.store = NetworkStore()
+
 		# Store cmd option flags
 		self.verbose = verbose
 		self.disable_graph = disable_graph
@@ -40,6 +44,20 @@ class NeuralNetwork:
 
 			# Build the network
 			self.__build_network(layers)
+
+	##########
+	# Loads a saved model
+	##########
+	def __load(self, path):
+		if self.verbose:
+			print "[INFO] Loading saved model ", path
+
+	##########
+	# Saves our model to disk
+	##########
+	def save(self, path):
+		if self.verbose:
+			print "[INFO] Saving network model to ", path
 
 	##########
 	# Builds the neural network
