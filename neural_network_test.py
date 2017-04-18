@@ -1,7 +1,8 @@
 import argparse
 
-from neural_network import NeuralNetwork 
-from Util.handwriting_sample import get_sample_image_data
+from Core.nn.Model import Model 
+from Core.nn.NeuralNetwork import NeuralNetwork
+from Core.util.handwriting_sample import get_sample_image_data
 
 def main():
 	# Handle command line arguments
@@ -14,12 +15,15 @@ def main():
 		help="Load pre-trained model")
 	args = parser.parse_args()
 
+	# Build a new model
+	model = Model.new_model([784, 500, 10])
+
 	# Start the testing
-	neural_network = NeuralNetwork([784, 500, 10], epochs=10, verbose=args.verbose, 
+	neural_network = NeuralNetwork(model, epochs=10, verbose=args.verbose, 
 		disable_graph=args.disable_graph)
 	neural_network.train()
-	images, correct_vals = get_sample_image_data("/home/adam/projects/handwriting-samples/raw/")
-	neural_network.test(images, correct_vals)
+	# images, correct_vals = get_sample_image_data("/home/adam/projects/handwriting-samples/raw/")
+	# neural_network.test(images, correct_vals)
 
 if __name__ == '__main__':
 	main()

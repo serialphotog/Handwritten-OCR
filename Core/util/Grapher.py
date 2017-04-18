@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-class GraphEngine:
+class Grapher:
 
 	# The data points for our graph
 	data_points = []

@@ -1,7 +1,7 @@
 import tensorflow as tf
-from Util.input_data import read_data_sets # For MNIST dataset
 
-from Util.GraphEngine import GraphEngine
+from Core.util.input_data import read_data_sets # For MNIST dataset
+from Core.util.Grapher import Grapher
 
 class NeuralNetwork:
 
@@ -15,7 +15,9 @@ class NeuralNetwork:
 	#		* All other entries represent hidden layers
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
-	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False):
+	def __init__(self, model, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False):
+		# The model
+		self.model = model
 
 		# Store cmd option flags
 		self.verbose = verbose
@@ -23,7 +25,7 @@ class NeuralNetwork:
 
 		# Setup error rate graph
 		if not self.disable_graph:
-			self.error_graph = GraphEngine()
+			self.error_graph = Grapher()
 			self.error_graph.set_title("Rate of Error")
 			self.error_graph.set_axis_labels()
 
@@ -36,21 +38,15 @@ class NeuralNetwork:
 		self.n_epochs = epochs
 
 		# Build the network
-		self.__build_network(layers)
+		self.__build_network()
 
 	##########
 	# Builds the neural network
 	##########
-	def __build_network(self, layers):
-		# Build the layers
-		self.__build_layers(layers)
-
+	def __build_network(self):
 		# Placeholders for data in the TF Graph
-		self.graph_x = tf.placeholder("float", [None, self.n_inputs])
-		self.graph_y = tf.placeholder("float", [None, self.n_outputs])
-
-		# Initializes storage for weights and biases in our network
-		self.__init_values()
+		self.graph_x = tf.placeholder("float", [None, self.model.n_inputs])
+		self.graph_y = tf.placeholder("float", [None, self.model.n_outputs])
 
 		# Prediction engine and optimization
 		self.prediction = self.network()
@@ -67,20 +63,20 @@ class NeuralNetwork:
 	##########
 	def network(self):
 		# Initialize the hidden layers
-		for i in range(0, self.n_hidden_layers):
+		for i in range(0, self.model.n_hidden_layers):
 			if i == 0:
 				# First hidden layer, start with input as input layer
-				self.hidden_layers[i] = tf.add(tf.matmul(self.graph_x, self.weights['h0']), 
-					self.biases['b0'])
+				self.model.hidden_layers[i] = tf.add(tf.matmul(self.graph_x, self.model.weights['h0']), 
+					self.model.biases['b0'])
 			else:
 				# Input is previous hidden layer
-				self.hidden_layers[i] = tf.add(tf.matmul(self.hidden_layers[i-1], 
-					self.weights[self.__get_translated_idx(i)]), self.biases[self.__get_translated_idx(i, 'b')])
-			self.hidden_layers[i] = tf.nn.sigmoid(self.hidden_layers[i])
+				self.model.hidden_layers[i] = tf.add(tf.matmul(self.model.hidden_layers[i-1], 
+					self.model.weights[Model.get_translated_idx(i)]), self.model.biases[Model.get_translated_idx(i, 'b')])
+			self.model.hidden_layers[i] = tf.nn.sigmoid(self.model.hidden_layers[i])
 
 		# Output layer
-		output_layer = tf.matmul(self.hidden_layers[self.n_hidden_layers-1], 
-			self.weights['out']) + self.biases['out']
+		output_layer = tf.matmul(self.model.hidden_layers[self.model.n_hidden_layers-1], 
+			self.model.weights['out']) + self.model.biases['out']
 
 		return output_layer
 
@@ -131,52 +127,3 @@ class NeuralNetwork:
 		_, error_rate = self.session.run([self.prediction, self.cost], feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
 		print "Error rate: ", error_rate
 		print "Accuracy: ", self.session.run(self.accuracy, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
-
-	##########
-	# Sets up network layers
-	##########
-	def __build_layers(self, layers):
-		# The number of hidden layers
-		self.n_hidden_layers = len(layers) - 2
-		# Strip input and output layers, leaving hiden layers
-		self.hidden_layer_nodes = layers[1:-1]
-		# Storage for the hidden layers
-		self.hidden_layers = [None] * self.n_hidden_layers
-		# The number of input nodes
-		self.n_inputs = layers[0]
-		# The number of output nodes
-		self.n_outputs = layers[len(layers) - 1]
-
-	##########
-	# Initializes the weights and biases for the network
-	##########
-	def __init_values(self):
-		# Setup storage
-		self.weights = {}
-		self.biases = {}
-
-		# Randomly assign weights and biases to start with
-		for i in range(0, self.n_hidden_layers):
-			# Weights
-			if i == 0:
-				# First hidden layer, start with input layer
-				self.weights[self.__get_translated_idx(i)] = tf.Variable(tf.random_normal([self.n_inputs, 
-					self.hidden_layer_nodes[0]]))
-			else:
-				# Continue with input being previous hidden layer
-				self.weights[self.__get_translated_idx(i)] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[i-1], 
-					self.hidden_layer_nodes[i]]))
-
-			# Biases
-			self.biases[self.__get_translated_idx(i, 'b')] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[i]]))
-
-		# Add the outputs to weights and biases
-		self.weights['out'] = tf.Variable(tf.random_normal([self.hidden_layer_nodes[self.n_hidden_layers-1], 
-			self.n_outputs]))
-		self.biases['out'] = tf.Variable(tf.random_normal([self.n_outputs]))
-
-	##########
-	# Returns index for weights and biases store
-	##########
-	def __get_translated_idx(self, idx, prefix='h'):
-		return prefix + str(idx)
