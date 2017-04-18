@@ -2,7 +2,6 @@ import tensorflow as tf
 from Util.input_data import read_data_sets # For MNIST dataset
 
 from Util.GraphEngine import GraphEngine
-from Util.network_store import NetworkStore
 
 class NeuralNetwork:
 
@@ -16,9 +15,7 @@ class NeuralNetwork:
 	#		* All other entries represent hidden layers
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
-	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False, load=None):
-		# Initialize our network store
-		self.store = NetworkStore()
+	def __init__(self, layers, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False):
 
 		# Store cmd option flags
 		self.verbose = verbose
@@ -33,31 +30,13 @@ class NeuralNetwork:
 		# Setup the MNIST data
 		self.MNIST = read_data_sets("MNIST_data/", one_hot=True)
 
-		if not load == None:
-			# Load pre-trained model
-			self.__load(load)
-		else:
-			# The learning rate for the network
-			self.learning_rate = learning_rate
-			# Number of epochs for training cycle
-			self.n_epochs = epochs
+		# The learning rate for the network
+		self.learning_rate = learning_rate
+		# Number of epochs for training cycle
+		self.n_epochs = epochs
 
-			# Build the network
-			self.__build_network(layers)
-
-	##########
-	# Loads a saved model
-	##########
-	def __load(self, path):
-		if self.verbose:
-			print "[INFO] Loading saved model ", path
-
-	##########
-	# Saves our model to disk
-	##########
-	def save(self, path):
-		if self.verbose:
-			print "[INFO] Saving network model to ", path
+		# Build the network
+		self.__build_network(layers)
 
 	##########
 	# Builds the neural network
