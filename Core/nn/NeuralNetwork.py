@@ -15,16 +15,16 @@ class NeuralNetwork:
 	#		* All other entries represent hidden layers
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
-	def __init__(self, model, learning_rate=0.001, epochs=1, verbose=False, disable_graph=False):
+	def __init__(self, model, learning_rate=0.001, epochs=1, verbose=False, enable_graph=False):
 		# The model
 		self.model = model
 
 		# Store cmd option flags
 		self.verbose = verbose
-		self.disable_graph = disable_graph
+		self.enable_graph = enable_graph
 
 		# Setup error rate graph
-		if not self.disable_graph:
+		if self.enable_graph:
 			self.error_graph = Grapher()
 			self.error_graph.set_title("Rate of Error")
 			self.error_graph.set_axis_labels()
@@ -99,7 +99,7 @@ class NeuralNetwork:
 				avg_cost += error_rate/total_batch_size
 
 				# Store error for graphing
-				if not self.disable_graph:
+				if self.enable_graph:
 					self.error_graph.add_plot_point(error_rate)
 
 			# Print the epoch results to the terminal
@@ -117,7 +117,7 @@ class NeuralNetwork:
 			self.graph_y: self.MNIST.test.labels}, session=self.session)
 
 		# Show the graphs
-		if not self.disable_graph:
+		if self.enable_graph:
 			
 			self.error_graph.plot()
 			self.error_graph.show()

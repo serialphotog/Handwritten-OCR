@@ -9,8 +9,8 @@ def main():
 	parser = argparse.ArgumentParser(description="Neural Network Tester")
 	parser.add_argument("-v", action="store_true", dest="verbose", 
 		help="Enables verbose output.")
-	parser.add_argument("-g", action="store_true", dest="disable_graph",
-		help="Disables graph production.")
+	parser.add_argument("-g", action="store_true", dest="enable_graph",
+		help="Enables graph production.")
 	parser.add_argument("-l", dest="load_path", action="store", default=None,
 		help="Load pre-trained model")
 	args = parser.parse_args()
@@ -20,7 +20,7 @@ def main():
 
 	# Start the testing
 	neural_network = NeuralNetwork(model, epochs=10, verbose=args.verbose, 
-		disable_graph=args.disable_graph)
+		enable_graph=args.enable_graph)
 	neural_network.train()
 	# images, correct_vals = get_sample_image_data("/home/adam/projects/handwriting-samples/raw/")
 	# neural_network.test(images, correct_vals)
