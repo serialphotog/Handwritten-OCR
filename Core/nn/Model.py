@@ -4,6 +4,11 @@ class Model:
 
 	##########
 	# Initializes a model
+	# The layers parameter is a list representing our neural network:
+	#		* The first entry represents the input layer
+	#		* The last entry represents the output layer
+	#		* All other entries represent hidden layers
+	#		* The numbers for each entry represent number of nodes in the layer
 	##########
 	def __init__(self, layers, weights, biases):
 		self.layers = layers 

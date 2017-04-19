@@ -9,11 +9,6 @@ class NeuralNetwork:
 
 	##########
 	# Initializes our tensorflow neural network
-	# The layers parameter is a list representing our neural network:
-	#		* The first entry represents the input layer
-	#		* The last entry represents the output layer
-	#		* All other entries represent hidden layers
-	#		* The numbers for each entry represent number of nodes in the layer
 	##########
 	def __init__(self, model, learning_rate=0.001, epochs=1, verbose=False, enable_graph=False):
 		# The model
