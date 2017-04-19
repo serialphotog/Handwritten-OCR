@@ -17,10 +17,10 @@ class DataProcessor:
 	def process_image_data(img):
 		# Read in, invert and resize the image
 		inverted_img = cv2.imread(img, 0)
-		inverted_img = cv2.resize(255-inverted, (28, 28)) # Inverts and resizes image
+		inverted_img = cv2.resize(255-inverted_img, (28, 28)) # Inverts and resizes image
 
 		# Generate white text on black background (Improves the inverted image)
-		(threshold, inverted_img) = cv2.threshold(inverted, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+		(threshold, inverted_img) = cv2.threshold(inverted_img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
 		# Centrally align the image (as best as possible)
 		inverted_img = DataProcessor.shift_image(inverted_img)
@@ -42,10 +42,10 @@ class DataProcessor:
 	@staticmethod
 	def shift_image(img):
 		# Calculate the shift amounts
-		cy, cx = ndimage.measurments.center_of_mass(img)
+		cy, cx = ndimage.measurements.center_of_mass(img)
 		rows, cols = img.shape
 		shiftx = np.round(cols/2.0-cx).astype(int)
-		shitfy = np.round(rows/2.0-cy).astype(int)
+		shifty = np.round(rows/2.0-cy).astype(int)
 
 		# Build the transformation matrix and perform the shift operation
 		transform = np.float32([[1, 0, shiftx], [0, 1, shifty]])
