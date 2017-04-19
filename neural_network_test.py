@@ -11,8 +11,6 @@ def main():
 		help="Enables verbose output.")
 	parser.add_argument("-g", action="store_true", dest="enable_graph",
 		help="Enables graph production.")
-	parser.add_argument("-l", dest="load_path", action="store", default=None,
-		help="Load pre-trained model")
 	args = parser.parse_args()
 
 	# Build a new model
