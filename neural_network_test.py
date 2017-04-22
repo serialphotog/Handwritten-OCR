@@ -22,9 +22,9 @@ def main():
 	# Start the testing
 	neural_network = NeuralNetwork(model, epochs=10, verbose=args.verbose, 
 		enable_graph=args.enable_graph)
-	neural_network.train()
-	images, correct_vals = data_engine.load_local_data("/home/adam/projects/handwriting-samples/raw/")
-	neural_network.test(images, correct_vals)
+	neural_network.train_mnist()
+	#images, correct_vals = data_engine.load_local_data("/home/adam/projects/handwriting-samples/raw/")
+	#Sneural_network.test(images, correct_vals)
 
 if __name__ == '__main__':
 	main()

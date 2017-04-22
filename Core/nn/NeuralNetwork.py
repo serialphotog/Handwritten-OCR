@@ -75,10 +75,50 @@ class NeuralNetwork:
 
 		return output_layer
 
+	## TODO: Moves shared code between training methods to new, common method
+
 	##########
-	# Trains the neural network
+	# Trains the neural network using a generic dataset
 	##########
-	def train(self):
+	def train(self, images, labels):
+		# Train based on the number of epochs
+		for i in range(self.n_epochs):
+			avg_cost = 0
+			n_images = len(images)
+
+			# Train for all images
+			for i in range(n_images):
+				# Run the optimizer
+				_, error_rate = self.session.run([self.optimizer, self.cost], feed_dict={self.graph_x: images,
+					self.graph_y: labels})
+				avg_cost += error_rate/n_images
+
+				# Store the error for graphing
+				if self.enable_graph:
+					self.error_graph.add_plot_point(error_rate)
+
+			# Print the epoch results to the terminal
+			if self.verbose and epoch % 1 == 0:
+				print "Epoch:", '%04d' % (epoch+1), "cost=", "{:9f}".format(avg_cost)
+
+		print "Training completed!"
+
+		# Calculate the network accuracy
+		correct_prediction = tf.equal(tf.argmax(self.prediction, 1), tf.argmax(self.graph_y, 1))
+		self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+
+		# Output the accuracy to termianl
+		print "Accuracy:", self.accuracy.eval({self.graph_x: images, self.graph_y: labels}, session=self.session)
+
+		# Show the graphs
+		if self.enable_graph:
+			self.error_graph.plot()
+			self.error_graph.show()
+
+	##########
+	# Trains the neural network using the MNIST dataset
+	##########
+	def train_mnist(self):
 		# Train the network according to number of epochs
 		for epoch in range(self.n_epochs):
 			avg_cost = 0
@@ -113,7 +153,6 @@ class NeuralNetwork:
 
 		# Show the graphs
 		if self.enable_graph:
-			
 			self.error_graph.plot()
 			self.error_graph.show()
 
