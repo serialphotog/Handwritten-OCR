@@ -75,79 +75,55 @@ class NeuralNetwork:
 
 		return output_layer
 
-	## TODO: Moves shared code between training methods to new, common method
+	##########
+	# Trains the neural network
+	#
+	# Params:
+	#	images - images to train on (default = None)
+	#	labels - correct values (default = None)
+	#	n_batchs - Number of batches to run (default = 0)
+	#
+	# Note that if n_batches = 0 we default to using mnist data
+	##########
+	def __train(self, images=None, labels=None, n_batches=0):
+		print "Running training sequence"
 
-	##########
-	# Trains the neural network using a generic dataset
-	##########
-	def train(self, images, labels):
-		# Train based on the number of epochs
-		for i in range(self.n_epochs):
+		# Run through n epochs
+		for epoch in range(self.n_epochs):
 			avg_cost = 0
-			n_images = len(images)
+			n_images = n_batches if n_batches > 0 else len(images)
 
-			# Train for all images
+			# Train through all images
 			for i in range(n_images):
-				# Run the optimizer
-				_, error_rate = self.session.run([self.optimizer, self.cost], feed_dict={self.graph_x: images,
-					self.graph_y: labels})
-				avg_cost += error_rate/n_images
+				# Get batch data
+				if n_batches == 0:
+					batch_x = images
+					batch_y = labels 
+				else:
+					batch_x, batch_y = self.MNIST.train.next_batch(self.TRAINING_BATCH_SIZE)
 
-				# Store the error for graphing
+				# Run the training step with the optimizer
+				_, error_rate = self.session.run([self.optimizer, self.cost], feed_dict={self.graph_x: batch_x,
+					self.graph_y: batch_y})
+
+				# Calculate the cost
+				avg_cost += error_rate / n_images
+
+				# Store the error rate for graphing
 				if self.enable_graph:
 					self.error_graph.add_plot_point(error_rate)
 
-			# Print the epoch results to the terminal
+			# Print the epoch results, if verbose output is enables
 			if self.verbose and epoch % 1 == 0:
 				print "Epoch:", '%04d' % (epoch+1), "cost=", "{:9f}".format(avg_cost)
 
-		print "Training completed!"
+		print "Training step completed!"
 
-		# Calculate the network accuracy
+		# Calculate the accuracy
 		correct_prediction = tf.equal(tf.argmax(self.prediction, 1), tf.argmax(self.graph_y, 1))
 		self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
-		# Output the accuracy to termianl
-		print "Accuracy:", self.accuracy.eval({self.graph_x: images, self.graph_y: labels}, session=self.session)
-
-		# Show the graphs
-		if self.enable_graph:
-			self.error_graph.plot()
-			self.error_graph.show()
-
-	##########
-	# Trains the neural network using the MNIST dataset
-	##########
-	def train_mnist(self):
-		# Train the network according to number of epochs
-		for epoch in range(self.n_epochs):
-			avg_cost = 0
-			total_batch_size = int(self.MNIST.train.num_examples/self.TRAINING_BATCH_SIZE)
-
-			# Loop over the batches
-			for i in range(total_batch_size):
-				batch_x, batch_y = self.MNIST.train.next_batch(self.TRAINING_BATCH_SIZE)
-
-				# Run the optimizer
-				_, error_rate = self.session.run([self.optimizer, self.cost], feed_dict={self.graph_x: batch_x, 
-					self.graph_y: batch_y})
-				avg_cost += error_rate/total_batch_size
-
-				# Store error for graphing
-				if self.enable_graph:
-					self.error_graph.add_plot_point(error_rate)
-
-			# Print the epoch results to the terminal
-			if self.verbose and epoch % 1 == 0: 
-				print "Epoch:", '%04d' % (epoch+1), "cost=", "{:9f}".format(avg_cost)
-
-		print "Training completed!"
-
-		# Calculate the network accuracy
-		correct_prediction = tf.equal(tf.argmax(self.prediction, 1), tf.argmax(self.graph_y, 1))
-		self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-
-		# Output accuracy to terminal
+		# Output the accuracy results
 		print "Accuracy:", self.accuracy.eval({self.graph_x: self.MNIST.test.images, 
 			self.graph_y: self.MNIST.test.labels}, session=self.session)
 
@@ -155,6 +131,21 @@ class NeuralNetwork:
 		if self.enable_graph:
 			self.error_graph.plot()
 			self.error_graph.show()
+
+	##########
+	# Trains the neural network using a generic dataset
+	##########
+	def train(self, images, labels):
+		self.__train(images, labels, 0)
+
+	##########
+	# Trains the neural network using the MNIST dataset
+	##########
+	def train_mnist(self):
+		# Calculate the number of batches
+		n_batches = int(self.MNIST.train.num_examples / self.TRAINING_BATCH_SIZE)
+		# Run the training
+		self.__train(n_batches=n_batches)
 
 	def test(self, image_data, correct_vals):
 		print "Running test case: "

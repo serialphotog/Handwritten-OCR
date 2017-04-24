@@ -24,9 +24,10 @@ class App:
 		# Start the testing
 		neural_network = NeuralNetwork(model, epochs=10, verbose=self.args.verbose, 
 			enable_graph=self.args.enable_graph)
-		neural_network.train_mnist()
-		#images, correct_vals = data_engine.load_local_data("/home/adam/projects/handwriting-samples/raw/")
-		#Sneural_network.test(images, correct_vals)
+		#neural_network.train_mnist()
+		images, correct_vals = self.data_engine.load_local_data("/home/adam/projects/handwriting-samples/raw/")
+		neural_network.train(images, correct_vals)
+		#neural_network.test(images, correct_vals)
 
 
 	##########
