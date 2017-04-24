@@ -10,12 +10,13 @@ class NeuralNetwork:
 	##########
 	# Initializes our tensorflow neural network
 	##########
-	def __init__(self, model, learning_rate=0.001, epochs=1, verbose=False, enable_graph=False):
+	def __init__(self, model, learning_rate=0.001, epochs=1, verbose=False, extreme_verbose=False, enable_graph=False):
 		# The model
 		self.model = model
 
 		# Store cmd option flags
 		self.verbose = verbose
+		self.extreme_verbose = extreme_verbose
 		self.enable_graph = enable_graph
 
 		# Setup error rate graph

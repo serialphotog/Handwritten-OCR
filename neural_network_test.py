@@ -26,7 +26,7 @@ class App:
 
 		# Start the testing
 		neural_network = NeuralNetwork(model, epochs=10, verbose=self.args.verbose, 
-			enable_graph=self.args.enable_graph)
+			extreme_verbose=self.args.extreme_verbose, enable_graph=self.args.enable_graph)
 		#neural_network.train_mnist()
 		images, correct_vals = self.data_engine.load_local_data(self.SAMPLE_PATH)
 		neural_network.train(images, correct_vals)
@@ -40,6 +40,8 @@ class App:
 		parser = argparse.ArgumentParser(description="Neural Network Tester")
 		parser.add_argument("-v", action="store_true", dest="verbose", 
 			help="Enables verbose output.")
+		parser.add_argument("-ev", action="store_true", dest="extreme_verbose",
+			help="Enables extreme verbose output")
 		parser.add_argument("-g", action="store_true", dest="enable_graph",
 			help="Enables graph production.")
 		self.args = parser.parse_args()
