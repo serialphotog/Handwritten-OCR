@@ -5,6 +5,9 @@ from Core.nn.NeuralNetwork import NeuralNetwork
 from Core.data.NNData import NNData
 
 class App:
+	# The path to the handwriting samples
+	SAMPLE_PATH = "/Users/adam/projects/samples/raw1/"
+
 	##########
 	# Initialize application components
 	##########
@@ -24,10 +27,10 @@ class App:
 		# Start the testing
 		neural_network = NeuralNetwork(model, epochs=10, verbose=self.args.verbose, 
 			enable_graph=self.args.enable_graph)
-		neural_network.train_mnist()
-		images, correct_vals = self.data_engine.load_local_data("/home/adam/projects/handwriting-samples/raw/")
-		#neural_network.train(images, correct_vals)
-		#neural_network.test(images, correct_vals)
+		#neural_network.train_mnist()
+		images, correct_vals = self.data_engine.load_local_data(self.SAMPLE_PATH)
+		neural_network.train(images, correct_vals)
+		neural_network.test(images, correct_vals)
 
 
 	##########
