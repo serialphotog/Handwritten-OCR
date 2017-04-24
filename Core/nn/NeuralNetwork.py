@@ -21,7 +21,7 @@ class NeuralNetwork:
 		# Setup error rate graph
 		if self.enable_graph:
 			self.error_graph = Grapher()
-			self.error_graph.set_title("Rate of Error")
+			self.error_graph.set_title("Rate of Error: " + model.name)
 			self.error_graph.set_axis_labels()
 
 		# Setup the MNIST data
