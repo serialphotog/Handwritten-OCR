@@ -10,7 +10,8 @@ class Model:
 	#		* All other entries represent hidden layers
 	#		* The numbers for each entry represent number of nodes in the layer
 	##########
-	def __init__(self, layers, weights, biases):
+	def __init__(self, name, layers, weights, biases):
+		self.name = name
 		self.layers = layers 
 		self.weights = weights
 		self.biases = biases 
@@ -36,7 +37,7 @@ class Model:
 	# Static method to build a new, untrained model
 	##########
 	@staticmethod
-	def new_model(layers):
+	def new_model(name, layers):
 		# The number of hidden layers
 		n_hidden_layers = len(layers) - 2
 		# Strip the input and output layers, just leaving hidden layers
@@ -72,7 +73,7 @@ class Model:
 		biases['out'] = tf.Variable(tf.random_normal([n_outputs]))
 
 		# Return the new model
-		return Model(layers, weights, biases)
+		return Model(name, layers, weights, biases)
 
 	##########
 	# Static method to translate index for weights and biases
