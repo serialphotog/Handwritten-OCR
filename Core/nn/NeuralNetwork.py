@@ -1,6 +1,8 @@
 import tensorflow as tf
 
 from Core.util.input_data import read_data_sets # For MNIST dataset
+
+from Core.data.NNData import NNData as Data
 from Core.util.Grapher import Grapher
 
 class NeuralNetwork:
@@ -148,8 +150,31 @@ class NeuralNetwork:
 		# Run the training
 		self.__train(n_batches=n_batches)
 
+	##########
+	# Tests images agains the neural network
+	#
+	# Params:
+	# 	* image_data - The image data (pixel values stored in list)
+	#	* correct_vals - Correct values for images
+	##########
 	def test(self, image_data, correct_vals):
 		print "Running test case: "
-		_, error_rate = self.session.run([self.prediction, self.cost], feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
-		print "Error rate: ", error_rate
-		print "Accuracy: ", self.session.run(self.accuracy, feed_dict={self.graph_x: image_data, self.graph_y: correct_vals})
+
+		prediction = [tf.reduce_max(self.graph_y), tf.argmax(self.graph_y, 1)[0]]
+		accuracy = 0
+
+		for i in range(len(image_data)):
+			# Run through the network
+			guess = self.session.run(self.prediction, feed_dict={self.graph_x: [image_data[i]]})
+			guess_value = Data.get_real_value(guess[0])
+			correct_value = Data.get_real_value(correct_vals[i])
+
+			if guess_value == correct_value:
+				accuracy += 1 # Correct guess
+
+			if self.extreme_verbose:
+				print "Predicted:", Data.get_real_value(guess[0]), "Correct:", Data.get_real_value(correct_vals[i])
+
+		# Calculate the accuracy
+		accuracy = (float(accuracy) / len(image_data)) * 100
+		print "Accuracy:", "%.2f%%" % (accuracy)

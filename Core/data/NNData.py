@@ -44,3 +44,16 @@ class NNData:
 	##########
 	def __get_files_in_dir(self, dir):
 		return [file for file in os.listdir(dir) if os.path.isfile(os.path.join(dir, file))]
+
+	##########
+	# Extracts the real value from an array.
+	# Our neural network outputs results, such as [13.57, 0, 2.3, ..., 6.7]. This method converts this into 
+	# the real value it represents (0-9)
+	##########
+	@staticmethod
+	def get_real_value(value_arr):
+		highest = 0
+		for i in range(len(value_arr)):
+			if value_arr[i] > highest: 
+				highest = i
+		return highest
