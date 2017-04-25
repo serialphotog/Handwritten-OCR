@@ -4,6 +4,7 @@ from Core.util.input_data import read_data_sets # For MNIST dataset
 
 from Core.data.NNData import NNData as Data
 from Core.util.Grapher import Grapher
+from Core.util.Timer import Timer 
 
 class NeuralNetwork:
 
@@ -139,16 +140,22 @@ class NeuralNetwork:
 	# Trains the neural network using a generic dataset
 	##########
 	def train(self, images, labels):
+		timer = Timer()
+		timer.start()
 		self.__train(images, labels, 0)
+		print "Training completed in:", timer.stop(), "seconds"
 
 	##########
 	# Trains the neural network using the MNIST dataset
 	##########
 	def train_mnist(self):
+		timer = Timer()
+		timer.start()
 		# Calculate the number of batches
 		n_batches = int(self.MNIST.train.num_examples / self.TRAINING_BATCH_SIZE)
 		# Run the training
 		self.__train(n_batches=n_batches)
+		print "Training completed in:", timer.stop(), "seconds"
 
 	##########
 	# Tests images agains the neural network
