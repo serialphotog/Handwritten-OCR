@@ -42,7 +42,17 @@ class App:
 		else:
 			network_name = "Default Topology"
 
+		# Build the network model and setup network
 		model = Model.new_model(network_name, topology)
+		neural_network = NeuralNetwork(model, epochs=epochs, verbose=self.args.verbose, 
+			extreme_verbose=self.args.extreme_verbose, enable_graph=self.args.enable_graph)
+
+		# Check if we specified data to train the network with
+		if self.args.train_path:
+			images, correct_vals = self.data_engine.load_local_data(self.args.train_path)
+			neural_network.train(images, correct_vals)
+		else:
+			neural_network.train_mnist()
 
 		# Start the testing
 		neural_network = NeuralNetwork(model, epochs=epochs, verbose=self.args.verbose, 
@@ -70,6 +80,8 @@ class App:
 			help="Name for the network")
 		parser.add_argument("-e", dest="epochs",
 			help="Specifies the number of epochs")
+		parser.add_argument("-train", dest="train_path",
+			help="Specifies path to data to use for taining")
 		self.args = parser.parse_args()
 
 
