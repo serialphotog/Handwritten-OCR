@@ -23,15 +23,27 @@ class App:
 	# Runs the app
 	##########
 	def run(self):
-		model = Model.new_model("Test Model", [784, 500, 10])
+		# Check if we specified a topology to run with
+		if self.args.topology:
+			topology = self.args.topology.split(',')
+			for i in range(len(topology)): topology[i] = int(topology[i])
+		else:
+			topology = [784, 500, 10]
+
+		if self.args.name:
+			network_name = self.args.name 
+		else:
+			network_name = "Default Topology"
+
+		model = Model.new_model(network_name, topology)
 
 		# Start the testing
 		neural_network = NeuralNetwork(model, epochs=1, verbose=self.args.verbose, 
 			extreme_verbose=self.args.extreme_verbose, enable_graph=self.args.enable_graph)
-		#neural_network.train_mnist()
-		images, correct_vals = self.data_engine.load_local_data(self.SAMPLE_PATH)
-		neural_network.train(images, correct_vals)
-		neural_network.test(images, correct_vals)
+		neural_network.train_mnist()
+		# images, correct_vals = self.data_engine.load_local_data(self.SAMPLE_PATH)
+		# neural_network.train(images, correct_vals)
+		# neural_network.test(images, correct_vals)
 
 
 	##########
@@ -45,6 +57,10 @@ class App:
 			help="Enables extreme verbose output")
 		parser.add_argument("-g", action="store_true", dest="enable_graph",
 			help="Enables graph production.")
+		parser.add_argument("-t", dest="topology",
+			help="Specifies a topology for the network (E.G. 784,500,10")
+		parser.add_argument("-n", dest="name",
+			help="Name for the network")
 		self.args = parser.parse_args()
 
 
