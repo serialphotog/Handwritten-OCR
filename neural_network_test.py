@@ -30,6 +30,13 @@ class App:
 		else:
 			topology = [784, 500, 10]
 
+		# Check if we specified a number of epochs
+		if self.args.epochs:
+			epochs = int(self.args.epochs)
+		else:
+			epochs = 1
+
+		# Check if we specified a title for the model
 		if self.args.name:
 			network_name = self.args.name 
 		else:
@@ -38,7 +45,7 @@ class App:
 		model = Model.new_model(network_name, topology)
 
 		# Start the testing
-		neural_network = NeuralNetwork(model, epochs=1, verbose=self.args.verbose, 
+		neural_network = NeuralNetwork(model, epochs=epochs, verbose=self.args.verbose, 
 			extreme_verbose=self.args.extreme_verbose, enable_graph=self.args.enable_graph)
 		neural_network.train_mnist()
 		# images, correct_vals = self.data_engine.load_local_data(self.SAMPLE_PATH)
@@ -61,6 +68,8 @@ class App:
 			help="Specifies a topology for the network (E.G. 784,500,10")
 		parser.add_argument("-n", dest="name",
 			help="Name for the network")
+		parser.add_argument("-e", dest="epochs",
+			help="Specifies the number of epochs")
 		self.args = parser.parse_args()
 
 
