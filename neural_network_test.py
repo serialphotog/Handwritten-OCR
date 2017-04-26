@@ -5,10 +5,6 @@ from Core.nn.NeuralNetwork import NeuralNetwork
 from Core.data.NNData import NNData
 
 class App:
-	# The path to the handwriting samples
-	#SAMPLE_PATH = "/home/adam/projects/handwriting-samples/raw2/"
-	SAMPLE_PATH = "/Users/adam/projects/samples/raw1/"
-
 	##########
 	# Initialize application components
 	##########
