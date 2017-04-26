@@ -91,9 +91,7 @@ class NeuralNetwork:
 	# Note that if n_batches = 0 we default to using mnist data
 	##########
 	def __train(self, images=None, labels=None, n_batches=0):
-		print "*"*25
-		print "Running training sequence"
-		print "*"*25
+		self.__print_header("Running training sequence")
 
 		# Run through n epochs
 		for epoch in range(self.n_epochs):
@@ -168,7 +166,7 @@ class NeuralNetwork:
 	#	* correct_vals - Correct values for images
 	##########
 	def test(self, image_data, correct_vals):
-		print "Running test case: "
+		self.__print_header("Running test case")
 
 		prediction = [tf.reduce_max(self.graph_y), tf.argmax(self.graph_y, 1)[0]]
 		accuracy = 0
@@ -188,3 +186,11 @@ class NeuralNetwork:
 		# Calculate the accuracy
 		accuracy = (float(accuracy) / len(image_data)) * 100
 		print "Accuracy:", "%.2f%%" % (accuracy)
+
+	##########
+	# Simple function to print a nice-looking header to console
+	##########
+	def __print_header(self, header):
+		print "*"*50
+		print "\t", header
+		print "*"*50
