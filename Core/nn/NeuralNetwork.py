@@ -3,6 +3,7 @@ import tensorflow as tf
 from Core.util.input_data import read_data_sets # For MNIST dataset
 
 from Core.data.NNData import NNData as Data
+from Core.nn.Model import Model
 from Core.util.Grapher import Grapher
 from Core.util.Timer import Timer 
 
@@ -90,7 +91,9 @@ class NeuralNetwork:
 	# Note that if n_batches = 0 we default to using mnist data
 	##########
 	def __train(self, images=None, labels=None, n_batches=0):
+		print "*"*25
 		print "Running training sequence"
+		print "*"*25
 
 		# Run through n epochs
 		for epoch in range(self.n_epochs):
