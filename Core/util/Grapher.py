@@ -1,6 +1,11 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
+##########
+# Class: Grapher
+#
+# A simple utility class to make creating pyplot graphs easier
+##########
 class Grapher:
 
 	# The data points for our graph

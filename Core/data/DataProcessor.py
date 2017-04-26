@@ -4,6 +4,11 @@ import os
 
 from scipy import ndimage
 
+##########
+# Class: DataProcessor
+#
+# Provides utilities for processing data images fro use with the neural network.
+##########
 class DataProcessor:
 
 	##########

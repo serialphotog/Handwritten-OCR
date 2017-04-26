@@ -1,5 +1,10 @@
 import tensorflow as tf 
 
+##########
+# Class: Model
+#
+# Represents a model for the neural network
+##########
 class Model:
 
 	##########

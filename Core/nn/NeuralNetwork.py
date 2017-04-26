@@ -7,8 +7,14 @@ from Core.nn.Model import Model
 from Core.util.Grapher import Grapher
 from Core.util.Timer import Timer 
 
+##########
+# Class: NeuralNetwork
+#
+# Represents the actual neural network
+##########
 class NeuralNetwork:
 
+	# Size of the training batches
 	TRAINING_BATCH_SIZE = 100
 
 	##########

@@ -1,9 +1,15 @@
 import argparse
 
+from Core.data.NNData import NNData
 from Core.nn.Model import Model 
 from Core.nn.NeuralNetwork import NeuralNetwork
-from Core.data.NNData import NNData
 
+
+##########
+# Class: App
+#
+# Represents the actual app itself
+##########
 class App:
 	##########
 	# Initialize application components

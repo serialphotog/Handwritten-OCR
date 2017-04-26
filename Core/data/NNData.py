@@ -3,6 +3,11 @@ import os
 
 from Core.data.DataProcessor import DataProcessor
 
+##########
+# Class: NNData
+#
+# Represents and manipulates the data used by the neural network.
+##########
 class NNData:
 
 	##########

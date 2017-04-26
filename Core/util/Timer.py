@@ -1,5 +1,10 @@
 import time
 
+##########
+# Class: Timer
+#
+# A simple utility class to make timing things easier
+##########
 class Timer:
 
 	##########
