@@ -54,13 +54,10 @@ class App:
 		else:
 			neural_network.train_mnist()
 
-		# Start the testing
-		neural_network = NeuralNetwork(model, epochs=epochs, verbose=self.args.verbose, 
-			extreme_verbose=self.args.extreme_verbose, enable_graph=self.args.enable_graph)
-		neural_network.train_mnist()
-		# images, correct_vals = self.data_engine.load_local_data(self.SAMPLE_PATH)
-		# neural_network.train(images, correct_vals)
-		# neural_network.test(images, correct_vals)
+		# Check if we specified input data to test with network
+		if self.args.test_path:
+			images, correct_vals = self.data_engine.load_local_data(self.args.test_path)
+			neural_network.test(images, correct_vals)
 
 
 	##########
@@ -82,6 +79,8 @@ class App:
 			help="Specifies the number of epochs")
 		parser.add_argument("-train", dest="train_path",
 			help="Specifies path to data to use for taining")
+		parser.add_argument("-test", dest="test_path",
+			help="Specifies a path for test data")
 		self.args = parser.parse_args()
 
 
