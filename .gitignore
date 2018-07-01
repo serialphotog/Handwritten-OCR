@@ -8,3 +8,5 @@ pip-selfcheck.json
 *.pyc
 MNIST_data
 *.sublime-project
+
+.DS_Store
