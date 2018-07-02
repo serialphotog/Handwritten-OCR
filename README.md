@@ -2,6 +2,23 @@
 
 This code was developed as part of a project for an Artificial Intelligence Class. It utilizes a neural network to identify handwritten characters.
 
+# Documentation
+
+The current capabilities of this project is to identify the hand-written digits 0-9. The neural network can be trained on both MNIST data and real-world data.
+
+## Command Line Arguments
+
+The following command line arguments are available:
+
+* **-v:** Enables verbose output
+* **-ev:** Enables extreme verbose output. this will cause the network to print what the neural network is predicting and what the actual value is.
+* **-g:** Enables graph output. The application has the ability to produce graphs using pyplot.
+* **-t:** Allows us to specify a topology for the neural network. For example, *-t 784,500,10*. This would create a network with and input layer of 784 nodes, a hidden layer with 500 nodes and an output layer with 10 nodes.
+* **-n:** Specifies a name for the neural network. Currently this is only used for the title of graphs.
+* **-e:** Specifies the number of epochs for the network.
+* **-train:** Allows us to specify a path to a set of images to use for taining the network. If this isn't specified, the network will train off the MNIST dataset.
+* **-test:** Allows us to specify a path to a set of images to test with the neural network.
+
 ## License
 
 Copyright 2018 Adam Thompson <adam@serialphotog.com>
