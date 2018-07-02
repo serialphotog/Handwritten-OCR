@@ -1,4 +1,4 @@
-# MNIST Neural Network Testing
+# OCR Testing
 
 This code was developed as part of a project for an Artificial Intelligence Class. It utilizes a neural network to identify handwritten characters.
 
