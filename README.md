@@ -19,7 +19,16 @@ The following command line arguments are available:
 * **-train:** Allows us to specify a path to a set of images to use for taining the network. If this isn't specified, the network will train off the MNIST dataset.
 * **-test:** Allows us to specify a path to a set of images to test with the neural network.
 
-## License
+# Roadmap
+
+Despite originally being developed as a class project, I still intend to expand on this program to further improve it and add more features. Here is my current roadmap of features:
+
+* Add the ability to save and load models. Currently the network needs to be retrained each time it is ran :(
+* Better Graphing Capabilities. There is currently very few aspects of the graph that can be customized, and currently only the cost can be graphed. This is extremely limited and I hop to expand upon the graphing functionality in the future.
+* Real time digit identification. I'd like the ability to use the network created by this project to identify digits in real-time.
+* Expand beyond 0-9. The network currently only identifies the digits 0-9. I'd like to greatly expand upon this.
+
+# License
 
 Copyright 2018 Adam Thompson <adam@serialphotog.com>
 
